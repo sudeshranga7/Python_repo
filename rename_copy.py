@@ -5,8 +5,10 @@ import datetime
 import re
 
 def sanitize_filename(filename):
-    # Replace consecutive underscores or dots with a single underscore or dot
-    sanitized_filename = re.sub(r'[_\.]+', '_', filename)
+    # Replace consecutive underscores with a single underscore
+    sanitized_filename = re.sub(r'[_]+', '_', filename)
+    # Replace consecutive dots with a single dot
+    sanitized_filename = re.sub(r'[.]+', '.', sanitized_filename)
     return sanitized_filename
 
 def copy_file(source_path, destination_path, source_filename_prefix, source_filename_suffix, copy_previous_day):
