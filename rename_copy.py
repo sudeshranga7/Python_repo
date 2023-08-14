@@ -2,6 +2,12 @@ import os
 import sys
 import shutil
 import datetime
+import re
+
+def sanitize_filename(filename):
+    # Replace consecutive underscores or dots with a single underscore or dot
+    sanitized_filename = re.sub(r'[_\.]+', '_', filename)
+    return sanitized_filename
 
 def copy_file(source_path, destination_path, source_filename_prefix, source_filename_suffix, copy_previous_day):
     try:
@@ -17,8 +23,10 @@ def copy_file(source_path, destination_path, source_filename_prefix, source_file
         source_filename_with_date = source_filename_prefix + source_file_date.strftime("%Y%m%d") + source_filename_suffix
         destination_filename = os.path.basename(source_filename_prefix + source_filename_suffix)
 
+        sanitized_destination_filename = sanitize_filename(destination_filename)
+        destination_file_path = os.path.join(destination_path, sanitized_destination_filename)
+
         source_file_path = os.path.join(source_path, source_filename_with_date)
-        destination_file_path = os.path.join(destination_path, destination_filename)
 
         if os.path.exists(source_file_path):
             shutil.copy2(source_file_path, destination_file_path)
