@@ -11,7 +11,7 @@ def sanitize_filename(filename):
     sanitized_filename = re.sub(r'[.]+', '.', sanitized_filename)
     return sanitized_filename
 
-def copy_file(source_path, destination_path, source_filename_prefix, source_filename_suffix):
+def copy_file(source_path, destination_path, source_filename_prefix, source_filename_suffix, copy_previous_day):
     try:
         current_time = datetime.datetime.now().time()
         current_date = datetime.datetime.now().date()
@@ -20,7 +20,7 @@ def copy_file(source_path, destination_path, source_filename_prefix, source_file
         source_file_date = current_date
         source_filename_with_date = source_filename_prefix + source_file_date.strftime("%Y%m%d") + source_filename_suffix
 
-        if current_time >= datetime.time(0, 0) and current_time <= datetime.time(0, 10):
+        if copy_previous_day and current_time >= datetime.time(0, 0) and current_time <= datetime.time(0, 10):
             source_file_path = os.path.join(source_path, source_filename_with_date)
             if not os.path.exists(source_file_path):
                 source_file_date = yesterday
@@ -44,7 +44,7 @@ def copy_file(source_path, destination_path, source_filename_prefix, source_file
 
 if __name__ == "__main__":
     if len(sys.argv) < 5:
-        print("Usage: python script.py source_path destination_path source_filename_prefix source_filename_suffix")
+        print("Usage: python script.py source_path destination_path source_filename_prefix source_filename_suffix [copy_previous_day]")
     else:
         try:
             source_path = sys.argv[1]
@@ -52,6 +52,10 @@ if __name__ == "__main__":
             source_filename_prefix = sys.argv[3]
             source_filename_suffix = sys.argv[4]
 
-            copy_file(source_path, destination_path, source_filename_prefix, source_filename_suffix)
+            copy_previous_day = False
+            if len(sys.argv) > 5 and sys.argv[5].lower() == 'true':
+                copy_previous_day = True
+
+            copy_file(source_path, destination_path, source_filename_prefix, source_filename_suffix, copy_previous_day)
         except Exception as e:
             print(f"An error occurred: {e}")
