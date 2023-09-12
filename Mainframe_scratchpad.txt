@@ -1,0 +1,33 @@
+//CHECKEMP EXEC PGM=SORT
+//SYSOUT   DD  SYSOUT=A    // Output messages
+//SORTIN   DD  DSN=YourInputFile,DISP=SHR  // Input file to check
+//SORTOUT  DD  DSN=&&TEMP,DISP=(MOD,PASS),UNIT=SYSDA,
+//             SPACE=(CYL,(1,1))
+//SYSIN    DD  *
+  SORT FIELDS=COPY
+/*
+
+//CHECKEMPTY EXEC PGM=ICETOOL
+//SYSOUT   DD  SYSOUT=A
+//TOOLMSG  DD  SYSOUT=A
+//IN       DD  DSN=&&TEMP,DISP=SHR
+//OUT      DD  DUMMY
+//TOOLIN   DD  *
+  COUNT FROM(IN) EMPTY
+/*
+
+//CHECKOK   EXEC PGM=IKJEFT01
+//SYSTSPRT DD  SYSOUT=A
+//SYSPRINT DD  SYSOUT=A
+//SYSIN    DD  *
+  IF MAXCC = 0 THEN
+    SET OK = 'YES'
+  ELSE
+    SET OK = 'NO'
+  END-IF
+  IF &OK = 'YES' THEN
+    // Do something when the file is empty
+  ELSE
+    // Do something when the file is not empty
+  END-IF
+/*
